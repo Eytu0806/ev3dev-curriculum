@@ -6,7 +6,7 @@ Much like you have a drive_inches command in your library, you will now make a t
 Authors: David Fisher and Eric Tu.
 """  # DONE: 1. PUT YOUR NAME IN THE ABOVE LINE.
 
-# DONE: 2. Copy the contents of m3_drive_inches_via_library.py and paste that text into this file below these comments.
+# DON: 2. Copy the contents of m3_drive_inches_via_library.py and paste that text into this file below these comments.
 #   Change the initial print and speak commands to reflect this module, like this...
 #     print("--------------------------------------------")
 #     print(" Turn degrees")
