@@ -19,5 +19,25 @@ import time
 class Snatch3r(object):
     """Commands for the Snatch3r robot that might be useful in many different programs."""
     
-    # TODO: Implement the Snatch3r class as needed when working the sandox exercises
+    # TODO: Implement the Snatch3r class as needed when working the sandbox exercises
     # (and delete these comments)
+
+    def move_distance(self, both_sp, inches):
+        left_motor = ev3.LargeMotor(ev3.OUTPUT_B)
+        right_motor = ev3.LargeMotor(ev3.OUTPUT_C)
+
+        assert left_motor.connected
+        assert right_motor.connected
+
+        time_s = 1  # Any value other than 0.
+        while time_s != 0:
+            left_motor.run_to_rel_pos(speed_sp=both_sp, position_sp=90 * inches, stop_action=ev3.Motor.STOP_ACTION_BRAKE)
+            right_motor.run_to_rel_pos(speed_sp=both_sp,position_sp=90*inches,stop_action=ev3.Motor.STOP_ACTION_BRAKE)
+
+            left_motor.wait_while(ev3.Motor.STATE_RUNNING)
+            right_motor.wait_while(ev3.Motor.STATE_RUNNING)
+
+
+
+
+            ev3.Sound.beep().wait()
