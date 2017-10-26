@@ -72,3 +72,4 @@ def main():
 
      print("Goodbye!")
      ev3.Sound.speak("Goodbye").wait()
+main()
