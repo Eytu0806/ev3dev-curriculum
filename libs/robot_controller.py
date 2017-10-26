@@ -21,21 +21,24 @@ class Snatch3r(object):
     
     # TODO: Implement the Snatch3r class as needed when working the sandbox exercises
     # (and delete these comments)
+    def __init__(self):
+        self.left_motor = ev3.LargeMotor(ev3.OUTPUT_B)
+        self.right_motor = ev3.LargeMotor(ev3.OUTPUT_C)
 
     def drive_inches(self, inches, both_sp):
-        left_motor = ev3.LargeMotor(ev3.OUTPUT_B)
-        right_motor = ev3.LargeMotor(ev3.OUTPUT_C)
 
-        assert left_motor.connected
-        assert right_motor.connected
+
+
+        assert self.left_motor.connected
+        assert self.right_motor.connected
 
         time_s = 1  # Any value other than 0.
         while time_s != 0:
-            left_motor.run_to_rel_pos(speed_sp=both_sp, position_sp=90 * inches, stop_action=ev3.Motor.STOP_ACTION_BRAKE)
-            right_motor.run_to_rel_pos(speed_sp=both_sp,position_sp=90*inches,stop_action=ev3.Motor.STOP_ACTION_BRAKE)
+            self.left_motor.run_to_rel_pos(speed_sp=both_sp, position_sp=90 * inches, stop_action=ev3.Motor.STOP_ACTION_BRAKE)
+            self.right_motor.run_to_rel_pos(speed_sp=both_sp,position_sp=90*inches,stop_action=ev3.Motor.STOP_ACTION_BRAKE)
 
-            left_motor.wait_while(ev3.Motor.STATE_RUNNING)
-            right_motor.wait_while(ev3.Motor.STATE_RUNNING)
+            self.left_motor.wait_while(ev3.Motor.STATE_RUNNING)
+            self.right_motor.wait_while(ev3.Motor.STATE_RUNNING)
 
 
 
