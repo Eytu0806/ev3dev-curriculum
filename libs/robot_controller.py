@@ -22,7 +22,7 @@ class Snatch3r(object):
     # TODO: Implement the Snatch3r class as needed when working the sandbox exercises
     # (and delete these comments)
 
-    def move_distance(self, both_sp, inches):
+    def drive_inches(self, inches, both_sp):
         left_motor = ev3.LargeMotor(ev3.OUTPUT_B)
         right_motor = ev3.LargeMotor(ev3.OUTPUT_C)
 
