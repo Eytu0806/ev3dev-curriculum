@@ -33,6 +33,9 @@ def main():
         left_motor.run_to_rel_pos(speed_sp=both_sp,position=90*inches,stop_action=ev3.Motor.STOP_ACTION_BRAKE)
         right_motor.run_to_rel_pos(speed_sp=both_sp,position=90*inches,stop_action=ev3.Motor.STOP_ACTION_BRAKE)
 
+        left_motor.wait_while(ev3.Motor.STATE_RUNNING)
+        right_motor.wait_while(ev3.Motor.STATE_RUNNING)
+
 
 
         ev3.Sound.beep().wait()
@@ -66,7 +69,7 @@ main()
 #        -- speed_sp
 #        -- stop_action
 
-# TODO: 5. Make sure the beep happens AFTER the motors stop.  Use the wait_while command to block code execution.
+# DONE: 5. Make sure the beep happens AFTER the motors stop.  Use the wait_while command to block code execution.
 
 # TODO: 6. Formally test your work. When you think you have the problem complete run these tests:
 #   200 dps 24 inches (make sure it drives within 2 inches of the target distance)
