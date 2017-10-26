@@ -30,12 +30,11 @@ def main():
     while time_s != 0:
         both_sp = int(input("Enter a speed (0 to 900 dps): "))
         inches = int(input("Enter a distance to drive (inches): "))
-        left_motor.run_forever(speed_sp=both_sp)
-        right_motor.run_forever(speed_sp=both_sp)
-        time_s = (inches/.011186)/both_sp
-        time.sleep(time_s)
-        left_motor.stop()
-        right_motor.stop(stop_action="brake")
+        left_motor.run_to_rel_pos(speed_sp=both_sp,position=90*inches,stop_action=ev3.Motor.STOP_ACTION_BRAKE)
+        right_motor.run_to_rel_pos(speed_sp=both_sp,position=90*inches,stop_action=ev3.Motor.STOP_ACTION_BRAKE)
+
+
+
         ev3.Sound.beep().wait()
 
 
@@ -51,7 +50,7 @@ main()
 # DONE: 3. Add a beep after the drive motors stop (see code below).  Test your code to hear the beep AFTER movement.
 #   ev3.Sound.beep().wait()
 
-# TODO: 4. Instead of using the run_forever, time.sleep, stop pattern switch to using the run_to_rel_pos command.
+# DONE: 4. Instead of using the run_forever, time.sleep, stop pattern switch to using the run_to_rel_pos command.
 #   You will need to determine the position_sp value to pass into the run_to_rel_pos command as a named argument.
 #   Assume the diameter of the wheel is 1.3" (close enough).  A 1.3" diameter wheel results in approximately a 4"
 #     circumference, so 360 degrees = 4 inches of travel.
