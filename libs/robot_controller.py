@@ -43,8 +43,6 @@ class Snatch3r(object):
 
             ev3.Sound.beep().wait()
             time_s = 0
-        print("Goodbye!")
-        ev3.Sound.speak("Goodbye").wait()
 
     def turn_degrees(self, degrees_to_turn, turn_speed_sp):
 
@@ -67,5 +65,10 @@ class Snatch3r(object):
 
             ev3.Sound.beep().wait()
             time_s = 0
-        print("Goodbye!")
-        ev3.Sound.speak("Goodbye").wait()
+
+
+    def drive_polygon(self, speed, sides, side_length):
+
+        for k in range(sides):
+            self.drive_inches(side_length, speed)
+            self.turn_degrees(180 - (((sides - 2) * 180) / sides), speed)
