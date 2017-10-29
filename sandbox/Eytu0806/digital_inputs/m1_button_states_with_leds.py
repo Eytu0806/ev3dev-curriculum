@@ -98,10 +98,19 @@ def main():
         #   Since you are only allowed to use states, not event callbacks, this last request is a pain, but it's doable
         #     with a while loop that blocks code execution until the down instance variable is False.
         #     Use a time.sleep(0.01) inside the while loop to do nothing but wait for the button to be released.
-
+        index = 1
         while True:
             if btn.down:
-                time.wait()
+
+                ev3.Leds.set_color(ev3.Leds.LEFT, led_colors[index])
+                ev3.Leds.set_color(ev3.Leds.RIGHT, led_colors[index])
+
+                index = index + 1
+
+                if index == 4:
+                    index = 1
+                break
+
 
 
 
