@@ -9,7 +9,7 @@ Since this module is all about the buttons the Sound code has just been provided
 example.  You will call different Sound functions using different buttons.
 
 Authors: David Fisher and Eric Tu.
-"""  # DONE: 1. PUT YOUR NAME IN THE ABOVE LINE.
+"""  # TODO: 1. PUT YOUR NAME IN THE ABOVE LINE.
 
 import ev3dev.ev3 as ev3
 import time
