@@ -58,7 +58,7 @@ def arm_calibration(arm_motor, touch_sensor):
       :type arm_motor: ev3.MediumMotor
       :type touch_sensor: ev3.TouchSensor
     """
-    # TODO: 3. Implement the arm calibration movement by fixing the code below (it has many bugs).  It should to this:
+    # DONE: 3. Implement the arm calibration movement by fixing the code below (it has many bugs).  It should to this:
     #   Command the arm_motor to run forever in the positive direction at max speed.
     #   Create an infinite while loop that will block code execution until the touch sensor's is_pressed value is True.
     #     Within that loop sleep for 0.01 to avoid running code too fast.
@@ -74,17 +74,22 @@ def arm_calibration(arm_motor, touch_sensor):
     arm_motor.run_forever(speed_sp=MAX_SPEED)
 
     while not touch_sensor.is_pressed:
+        print('Touch Sensor is NOT pressed')
         time.sleep(0.01)
 
-    arm_motor.wait_while(arm_motor.STATE_RUNNING)
-    arm_motor.stop(stop_action=arm_motor.STOP_ACTION_BRAKE)
+    print('Touch Sensor is PRESSED')
 
-    arm_revolutions_for_full_range = 14.2
-    arm_motor.run_to_rel_pos(position_sp=-arm_revolutions_for_full_range)
-    arm_motor.wait_while(arm_motor.STATE_RUNNING)
+
+    arm_motor.stop(stop_action="brake")
+
+    ev3.Sound.beep().wait()
+
+    arm_motor.run_to_rel_pos(position_sp= -5112, speed_sp = MAX_SPEED)
+    arm_motor.wait_while(ev3.MediumMotor.STATE_RUNNING)
 
     arm_motor.position = 0  # Calibrate the down position as 0 (this line is correct as is).
 
+    arm_motor.stop(stop_action="brake")
 
 def arm_up(arm_motor, touch_sensor):
     """
@@ -102,7 +107,7 @@ def arm_up(arm_motor, touch_sensor):
     # Make a beep sound
 
     # Code that attempts to do this task but has many bugs.  Fix them!
-    arm_motor.run_to_rel_pos(position_sp=14.2, speed_sp=MAX_SPEED)
+    arm_motor.run_to_rel_pos(position_sp=, speed_sp=MAX_SPEED)
     while touch_sensor.is_pressed:
         time.sleep(0.01)
     arm_motor.stop()
