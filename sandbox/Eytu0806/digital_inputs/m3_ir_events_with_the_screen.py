@@ -75,7 +75,7 @@ def main():
     #   .on_blue_up   to call handle_blue_up_1   (that exist already) with state and dc as parameters
     #   .on_blue_down to call handle_blue_down_1 (that exist already) with state and dc as parameters
     remote1 = ev3.RemoteControl(channel=1)
-    remote1.on_red_up = lambda state: handle_red_up_1(state, dc)
+    remote1.on_red_up = lambda state: handle_red_up_1(state , dc)
     remote1.on_red_down = lambda state: handle_red_down_1(state, dc)
     remote1.on_blue_up = lambda state: handle_blue_up_1(state, dc)
     remote1.on_blue_down = lambda state: handle_blue_down_1(state, dc)
@@ -170,9 +170,10 @@ def handle_blue_down_1(button_state, dc):
       :type button_state: bool
       :type dc: DataContainer
     """
+
     if button_state:
         display_image(dc.lcd_screen, dc.shifty_eyes)
-
+        print('BLUE DOWN IS PRESSED')
 
 def handle_red_up_2(button_state, dc):
     """
