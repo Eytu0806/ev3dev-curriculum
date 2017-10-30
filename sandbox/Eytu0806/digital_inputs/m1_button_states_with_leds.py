@@ -50,8 +50,9 @@ def main():
                   # ev3.Leds.ORANGE,  # Too close to another color in my opinion
                   # ev3.Leds.YELLOW,  # Too close to another color in my opinion
                   ev3.Leds.AMBER]
-
-    current_color_index = 0
+    count = 0
+    count2 = 1
+    index = 1
     while True:
         # DONE: 3. Implement the left, right, and up buttons as follows:
         #    When the up button is being pressed:
@@ -75,47 +76,70 @@ def main():
         if btn.up:
             print('up')
             ev3.Leds.all_off()  # Could also use this single command if turning both LEDs off.
-
+            time.sleep(0.01)
 
         if btn.left:
             print('left')
             ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
             ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.BLACK)
-
+            time.sleep(0.01)
         if btn.right:
             print('right')
             ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.RED)
             ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.BLACK)
+            time.sleep(0.01)
 
 
-        current_color_index = 0
 
 
-        # TODO: 4. Implement the down button to change the color of both LEDs.
+
+        # DONE: 4. Implement the down button to change the color of both LEDs.
         #   The first press to down should make both LEDs GREEN, the next press makes them RED, then AMBER, then off.
         #   If the user presses the down button again, wrap around the list to GREEN and continue as before.
         #   If the user holds down the button, figure out how to make the color change still only happen once.
         #   Since you are only allowed to use states, not event callbacks, this last request is a pain, but it's doable
         #     with a while loop that blocks code execution until the down instance variable is False.
         #     Use a time.sleep(0.01) inside the while loop to do nothing but wait for the button to be released.
-        index = 1
-        while True:
+
+
+        while btn.down:
+
+            ev3.Leds.set_color(ev3.Leds.LEFT, led_colors[index])
+            ev3.Leds.set_color(ev3.Leds.RIGHT, led_colors[index])
+            print('Down has been pressed', index)
+
             if btn.down:
-
-                ev3.Leds.set_color(ev3.Leds.LEFT, led_colors[index])
-                ev3.Leds.set_color(ev3.Leds.RIGHT, led_colors[index])
-
-                index = index + 1
-
-                if index == 4:
-                    index = 1
                 break
 
 
+            index = index + 1
+
+            if index == 4:
+                index = 0
+            print('Down has been released FFFFFFFFFFFFFFFFFF', index)
+
+            time.sleep(0.01)
 
 
 
-        # TODO: 5. Formally test your work. When you think you have the problem complete run these tests:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        # DONE: 5. Formally test your work. When you think you have the problem complete run these tests:
         #   Press Left - Green left LED is on (try holding the button down for a few seconds when you to the press)
         #   Press Right - Right right LED is on
         #   Press Up - Both LEDs are off
