@@ -118,7 +118,7 @@ def main():
             if index == 4:
                 index = 0
             print('Down has been released', index)
-            just_releaased = False
+            just_released = False
 
 
 
