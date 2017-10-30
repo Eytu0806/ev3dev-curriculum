@@ -74,7 +74,7 @@ def main():
     #   .on_red_down  to call handle_red_down_1  (that exist already) with state and dc as parameters
     #   .on_blue_up   to call handle_blue_up_1   (that exist already) with state and dc as parameters
     #   .on_blue_down to call handle_blue_down_1 (that exist already) with state and dc as parameters
-    remote1 = ev3.RemoteControl(channel = 1)
+    remote1 = ev3.RemoteControl(channel=1)
     remote1.on_red_up = lambda state: handle_red_up_1(state, dc)
     remote1.on_red_down = lambda state: handle_red_down_1(state, dc)
     remote1.on_blue_up = lambda state: handle_blue_up_1(state, dc)
@@ -86,6 +86,14 @@ def main():
     #   Channel 3's .on_red_up should call handle_red_up_3 (that exist already) with state and dc as parameters
     #   Channel 4's .on_red_up should call handle_red_up_4 (that exist already) with state and dc as parameters
 
+    remote2 = ev3.RemoteControl(channel=2)
+    remote3 = ev3.RemoteControl(channel=3)
+    remote4 = ev3.RemoteControl(channel=4)
+
+    remote2.on_red_up = lambda state: handle_red_up_2(state, dc)
+    remote3.on_red_up = lambda state: handle_red_up_3(state, dc)
+    remote4.on_red_up = lambda state: handle_red_up_4(state, dc)
+
     # Buttons on EV3
     btn = ev3.Button()
     btn.on_backspace = lambda state: handle_shutdown(state, dc)
@@ -93,10 +101,12 @@ def main():
     while dc.running:
         # TODO: 4. Call the .process() method on your channel 1 RemoveControl object, then review and run your code.
         #   Review the handle functions below to see how they draw to the screen.  They are already finished.
-
+        remote1.process()
         # TODO: 6. Call the .process() method on your channel 2 - 4 RemoveControl objects and demo your code.
         #   Review the handle functions below to see how they draw to the screen.  They are already finished.
-
+        remote2.process()
+        remote3.process()
+        remote4.process()
         # TODO: 7. Call over a TA or instructor to sign your team's checkoff sheet and do a code review.
         #
         # Observations you should make, IR buttons work exactly like buttons on the EV3.
