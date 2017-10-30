@@ -53,6 +53,7 @@ def main():
     count = 0
     count2 = 1
     index = 1
+    just_releaased = False
     while True:
         # DONE: 3. Implement the left, right, and up buttons as follows:
         #    When the up button is being pressed:
