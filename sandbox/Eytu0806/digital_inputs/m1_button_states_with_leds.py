@@ -103,22 +103,24 @@ def main():
 
 
         while btn.down:
-
             ev3.Leds.set_color(ev3.Leds.LEFT, led_colors[index])
             ev3.Leds.set_color(ev3.Leds.RIGHT, led_colors[index])
             print('Down has been pressed', index)
+            time.sleep(0.01)
 
-            if btn.down:
-                break
+            just_released = True
 
 
+        if just_released:
             index = index + 1
 
             if index == 4:
                 index = 0
-            print('Down has been released FFFFFFFFFFFFFFFFFF', index)
+            print('Down has been released', index)
+            just_releaased = False
 
-            time.sleep(0.01)
+
+
 
 
 
