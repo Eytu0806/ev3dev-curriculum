@@ -119,7 +119,7 @@ def main():
                 index = 0
             print('Down has been released', index)
             just_released = False
-
+            a = 1
 
 
 
