@@ -100,7 +100,9 @@ def main():
 
 def left_forward(button_state, robot):
     while button_state:
-        robot.left_forward(button_state)
+        robot.left_forward()
+
+    robot.leftmotor_stop()
 
 # TODO: 7. When your program is complete, call over a TA or instructor to sign your checkoff sheet and do a code review.
 #
