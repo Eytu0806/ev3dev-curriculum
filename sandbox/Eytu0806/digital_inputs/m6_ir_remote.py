@@ -99,10 +99,10 @@ def main():
 # TODO: 6. Implement the IR handler callbacks handlers.
 
 def left_forward(button_state, robot):
-    while button_state:
+    if button_state:
         robot.left_forward()
-
-    robot.leftmotor_stop()
+    else:
+        robot.leftmotor_stop()
 
 # TODO: 7. When your program is complete, call over a TA or instructor to sign your checkoff sheet and do a code review.
 #

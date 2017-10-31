@@ -125,5 +125,4 @@ class Snatch3r(object):
 
         assert self.left_motor.connected
 
-
         self.left_motor.run_forever(speed_sp=600)
