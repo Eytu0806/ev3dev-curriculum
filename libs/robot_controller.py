@@ -114,3 +114,9 @@ class Snatch3r(object):
         self.arm_motor.wait_while(ev3.MediumMotor.STATE_RUNNING)  # Blocks until the motor finishes running
         self.arm_motor.stop(stop_action= "brake")
         ev3.Sound.beep().wait()
+
+    def left_forward(self):
+
+        assert self.left_motor.connected
+
+        self.left_motor.run_forever(speed_sp=600)
