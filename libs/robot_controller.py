@@ -27,6 +27,8 @@ class Snatch3r(object):
         self.arm_motor = ev3.MediumMotor(ev3.OUTPUT_A)
         self.touch_sensor = ev3.TouchSensor()
         self.MAX_SPEED = 900
+        self.Leds = ev3.Leds
+        self.Sounds = ev3.Sound
 
     def drive_inches(self, inches, both_sp):
 
@@ -78,10 +80,8 @@ class Snatch3r(object):
         self.arm_motor.run_forever(speed_sp=self.MAX_SPEED)
 
         while not self.touch_sensor.is_pressed:
-            print('Touch Sensor is NOT pressed')
             time.sleep(0.01)
 
-        print('Touch Sensor is PRESSED')
 
         self.arm_motor.stop(stop_action="brake")
 
@@ -119,10 +119,45 @@ class Snatch3r(object):
 
         assert self.left_motor.connected
 
-        self.left_motor.stop
+        self.left_motor.stop()
+        self.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.BLACK)
+
+    def rightmotor_stop(self):
+
+        assert self.right_motor.connected
+
+        self.right_motor.stop()
+        self.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.BLACK)
 
     def left_forward(self):
 
         assert self.left_motor.connected
 
         self.left_motor.run_forever(speed_sp=600)
+        self.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
+
+    def left_backward(self):
+
+        assert self.left_motor.connected
+
+        self.left_motor.run_forever(speed_sp=-600)
+        self.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.RED)
+
+    def right_forward(self):
+
+        assert self.right_motor.connected
+
+        self.right_motor.run_forever(speed_sp=600)
+        self.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.GREEN)
+
+    def right_backward(self):
+
+        assert self.right_motor.connected
+
+        self.right_motor.run_forever(speed_sp=-600)
+        self.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.RED)
+
+    def shutdown(self):
+
+        self.Sounds.speak("Goodbye").wait()
+        print("Goodbye!")

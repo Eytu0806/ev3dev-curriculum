@@ -76,6 +76,9 @@ def main():
     rc2.on_blue_up = lambda state: handle_calibrate_button(state, robot)
 
     rc1.on_red_up = lambda state: left_forward(state, robot)
+    rc1.on_red_down = lambda state: left_backward(state, robot)
+    rc1.on_blue_up = lambda state: right_forward(state, robot)
+    rc1.on_blue_down = lambda state: right_backward(state, robot)
 
     while dc.running:
         # TODO: 5. Process the RemoteControl objects.
@@ -103,6 +106,25 @@ def left_forward(button_state, robot):
         robot.left_forward()
     else:
         robot.leftmotor_stop()
+
+def left_backward(button_state, robot):
+    if button_state:
+        robot.left_backward()
+    else:
+        robot.leftmotor_stop()
+
+def right_forward(button_state, robot):
+    if button_state:
+        robot.right_forward()
+    else:
+        robot.rightmotor_stop()
+
+def right_backward(button_state, robot):
+    if button_state:
+        robot.right_backward()
+    else:
+        robot.rightmotor_stop()
+
 
 # TODO: 7. When your program is complete, call over a TA or instructor to sign your checkoff sheet and do a code review.
 #
