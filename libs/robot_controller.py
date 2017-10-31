@@ -115,8 +115,11 @@ class Snatch3r(object):
         self.arm_motor.stop(stop_action= "brake")
         ev3.Sound.beep().wait()
 
-    def left_forward(self):
+    def left_forward(self, button_state):
 
         assert self.left_motor.connected
 
-        self.left_motor.run_forever(speed_sp=600)
+        if button_state:
+            self.left_motor.run_forever(speed_sp=600)
+        else:
+            self.left_motor.stop()
