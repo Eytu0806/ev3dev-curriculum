@@ -29,6 +29,8 @@ class Snatch3r(object):
         self.MAX_SPEED = 900
         self.Leds = ev3.Leds
         self.Sounds = ev3.Sound
+        self.left_speed = 600
+        self.right_speed = 600
 
     def drive_inches(self, inches, both_sp):
 
@@ -100,8 +102,10 @@ class Snatch3r(object):
         assert self.touch_sensor.connected
 
         self.arm_motor.run_to_rel_pos(position_sp=5112, speed_sp=self.MAX_SPEED)
+
         while not self.touch_sensor.is_pressed:
             time.sleep(0.01)
+
         self.arm_motor.stop(stop_action="brake")
         ev3.Sound.beep().wait()
 
@@ -161,3 +165,28 @@ class Snatch3r(object):
 
         self.Sounds.speak("Goodbye").wait()
         print("Goodbye!")
+
+    def loop_forever(self):
+
+        while True:
+            time.sleep(.01)
+
+    def drive(self, left_speed, right_speed):
+
+        assert self.left_motor.connected
+        assert self.right_motor.connected
+
+        self.left_speed = left_speed
+        self.right_speed = right_speed
+
+        self.left_motor.run_forever(speed_sp=self.left_speed)
+        self.right_motor.run_forever(speed_sp=self.right_speed)
+
+    def stop_both(self):
+
+        assert self.left_motor.connected
+        assert self.right_motor.connected
+
+        self.leftmotor_stop()
+        self.rightmotor_stop()
+
