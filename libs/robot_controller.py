@@ -202,3 +202,11 @@ class Snatch3r(object):
             time.sleep(.01)
 
         self.stop_both()
+
+    def read_reflected_light_intensity(self):
+
+        assert self.color_sensor
+
+        while True:
+            print(self.color_sensor.reflected_light_intensity)
+            time.sleep(2)
