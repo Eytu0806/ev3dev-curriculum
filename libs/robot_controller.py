@@ -209,3 +209,11 @@ class Snatch3r(object):
 
         print(self.color_sensor.reflected_light_intensity)
 
+    def follow_a_line(self, white_value, black_value):
+
+        assert self.color_sensor
+        assert self.left_motor.connected
+        assert self.right_motor.connected
+
+        if self.color_sensor.reflected_light_intensity == white_value:
+            
