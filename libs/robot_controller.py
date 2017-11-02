@@ -31,7 +31,7 @@ class Snatch3r(object):
         self.Sounds = ev3.Sound
         self.left_speed = 600
         self.right_speed = 600
-        self.color_sensor = ev3.ColorSensor
+        self.color_sensor = ev3.ColorSensor()
 
     def drive_inches(self, inches, both_sp):
 
@@ -193,11 +193,12 @@ class Snatch3r(object):
 
     def find_color(self, color_var):
 
-        assert self.color_sensor.connected
+        assert self.color_sensor
 
         self.drive(300, 300)
 
-        while not self.color_sensor.color.get() == color_var:
+        while not self.color_sensor.color == color_var:
+            print(self.color_sensor.color)
             time.sleep(.01)
 
         self.stop_both()
