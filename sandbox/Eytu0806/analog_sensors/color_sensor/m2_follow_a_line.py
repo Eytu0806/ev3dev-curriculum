@@ -83,7 +83,8 @@ def follow_the_line(robot, white_level, black_level):
     # should drive straight or turn to the right.  You will need to test and refine your code until it works well.
     # Optional extra - For a harder challenge could you drive on the black line and handle left or right turns?
 
-    robot.stop()
+
+    robot.follow_a_line(white_level,black_level)
     ev3.Sound.speak("Done")
 
 

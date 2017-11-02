@@ -215,5 +215,16 @@ class Snatch3r(object):
         assert self.left_motor.connected
         assert self.right_motor.connected
 
-        if self.color_sensor.reflected_light_intensity == white_value:
-            
+
+        while True:
+            if self.color_sensor.reflected_light_intensity == black_value:
+                self.drive(300,300)
+            if self.color_sensor.reflected_light_intensity == white_value:
+                self.drive(300,-300)
+                while not self.color_sensor.reflected_light_intensity == black_value:
+                    time.sleep(.01)
+                self.stop_both()
+            if self.touch_sensor.is_pressed:
+                break
+        self.stop_both()
+
