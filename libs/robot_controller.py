@@ -207,6 +207,5 @@ class Snatch3r(object):
 
         assert self.color_sensor
 
-        while True:
-            print(self.color_sensor.reflected_light_intensity)
-            time.sleep(2)
+        print(self.color_sensor.reflected_light_intensity)
+
