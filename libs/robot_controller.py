@@ -197,7 +197,7 @@ class Snatch3r(object):
 
         self.drive(300, 300)
 
-        while self.color_sensor.color != color_var:
+        while not self.color_sensor.color.get() == color_var:
             time.sleep(.01)
 
         self.stop_both()
