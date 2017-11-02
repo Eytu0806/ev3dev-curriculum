@@ -32,6 +32,7 @@ class Snatch3r(object):
         self.left_speed = 600
         self.right_speed = 600
         self.color_sensor = ev3.ColorSensor()
+        self.ir_sensor = ev3.InfraredSensor()
 
     def drive_inches(self, inches, both_sp):
 
@@ -228,3 +229,15 @@ class Snatch3r(object):
                 break
         self.stop_both()
 
+    def proximity_test(self):
+
+        assert self.ir_sensor
+
+        while True:
+            if self.ir_sensor.proximity < 10:
+                self.Sounds.beep().wait()
+                time.sleep(1.5)
+            print(self.ir_sensor.proximity)
+            time.sleep(.1)
+            if self.touch_sensor.is_pressed:
+                break
