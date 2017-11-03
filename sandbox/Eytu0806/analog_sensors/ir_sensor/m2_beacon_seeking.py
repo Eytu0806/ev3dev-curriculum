@@ -9,8 +9,8 @@ function gets the robot to that location it will stop the robot and return.  Wit
 prompted if they want to find the beacon again (presumably you move it first) or quit.
 
 
-Authors: David Fisher and PUT_YOUR_NAME_HERE.
-"""  # TODO: 1. PUT YOUR NAME IN THE ABOVE LINE.
+Authors: David Fisher and Eric Tu.
+"""  # DONE: 1. PUT YOUR NAME IN THE ABOVE LINE.
 import traceback
 
 import ev3dev.ev3 as ev3
@@ -56,17 +56,19 @@ def seek_beacon(robot):
       :rtype: bool
     """
 
-    # TODO: 2. Create a BeaconSeeker object on channel 1.
+    # DONE: 2. Create a BeaconSeeker object on channel 1.
 
     forward_speed = 300
     turn_speed = 100
+    BeaconSeaker = ev3.BeaconSeeker(channel=1)
+    robot.
 
     while not robot.touch_sensor.is_pressed:
         # The touch sensor can be used to abort the attempt (sometimes handy during testing)
 
         # TODO: 3. Use the beacon_seeker object to get the current heading and distance.
-        current_heading = 0  # use the beacon_seeker heading
-        current_distance = 0  # use the beacon_seeker distance
+        current_heading = BeaconSeaker.heading  # use the beacon_seeker heading
+        current_distance = BeaconSeaker.distance  # use the beacon_seeker distance
         if current_distance == -128:
             # If the IR Remote is not found just sit idle for this program until it is moved.
             print("IR Remote not found. Distance is -128")
