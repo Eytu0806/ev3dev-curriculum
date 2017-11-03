@@ -241,3 +241,51 @@ class Snatch3r(object):
             time.sleep(.1)
             if self.touch_sensor.is_pressed:
                 break
+
+    def seek_beacon(self):
+        """
+        Uses the IR Sensor in BeaconSeeker mode to find the beacon.  If the beacon is found this return True.
+        If the beacon is not found and the attempt is cancelled by hitting the touch sensor, return False.
+
+        Type hints:
+          :type robot: robo.Snatch3r
+          :rtype: bool
+        """
+
+        # DONE: 2. Create a BeaconSeeker object on channel 1.
+
+        forward_speed = 300
+        turn_speed = 100
+        BeaconSeaker = ev3.BeaconSeeker(channel=1)
+
+        while not self.touch_sensor.is_pressed:
+            # The touch sensor can be used to abort the attempt (sometimes handy during testing)
+
+            # DONE: 3. Use the beacon_seeker object to get the current heading and distance.
+            current_heading = BeaconSeaker.heading  # use the beacon_seeker heading
+            current_distance = BeaconSeaker.distance  # use the beacon_seeker distance
+            if current_distance == -128:
+                # If the IR Remote is not found just sit idle for this program until it is moved.
+                print("IR Remote not found. Distance is -128")
+                self.stop_both()
+            else:
+                if math.fabs(current_heading) < 2:
+                    # Close enough of a heading to move forward
+                    print("On the right heading. Distance: ", current_distance)
+                    # You add more!
+                    if current_distance == 0:
+                        time.sleep(1)
+                        self.stop_both()
+                        return True
+                    if current_distance > 0:
+                        self.drive(forward_speed, forward_speed)
+                if math.fabs(current_heading) > 2 and math.fabs(current_heading) < 10:
+                    if current_heading < 0:
+                        self.drive(-turn_speed, turn_speed)
+                    if current_heading > 0:
+                        self.drive(turn_speed, -turn_speed)
+                if math.fabs(current_heading) > 10:
+                    self.stop_both()
+                    print('Heading too far off')
+
+            time.sleep(0.2)
