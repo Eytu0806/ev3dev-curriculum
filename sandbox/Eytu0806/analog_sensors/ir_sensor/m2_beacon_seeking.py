@@ -95,7 +95,21 @@ def seek_beacon(robot):
                 # Close enough of a heading to move forward
                 print("On the right heading. Distance: ", current_distance)
                 # You add more!
-                robot.drive()
+                if current_distance == 0:
+                    time.sleep(1)
+                    robot.stop_both()
+                    return True
+                if current_distance > 0:
+                    robot.drive(forward_speed, forward_speed)
+            if math.fabs(current_heading) > 2 and math.fabs(current_heading) < 10:
+                if current_heading < 0:
+                    robot.drive(-turn_speed, turn_speed)
+                if current_heading > 0:
+                    robot.drive(turn_speed, -turn_speed)
+            if math.fabs(current_heading) > 10:
+                robot.stop_both()
+                print('Heading too far off')
+
 
 
 
