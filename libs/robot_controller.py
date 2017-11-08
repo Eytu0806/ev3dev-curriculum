@@ -175,6 +175,9 @@ class Snatch3r(object):
 
         while True:
             time.sleep(.01)
+    def loop_until_object_is_detected(self, width):
+        while width < 0:
+            time.sleep(.01)
 
     def drive(self, left_speed, right_speed):
 
