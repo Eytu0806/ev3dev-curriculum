@@ -4,6 +4,7 @@ from tkinter import ttk
 import mqtt_remote_method_calls as com
 
 
+# Selecting a color
 def select_color_window():
     mqtt_client = com.MqttClient()
     mqtt_client.connect_to_ev3()
@@ -11,23 +12,49 @@ def select_color_window():
     root = tkinter.Tk()
     root.title("Select Color")
 
-    selected_color = None
-
     colors_frame = ttk.Frame(root, padding=20, relief='raised')
     colors_frame.grid()
 
     amber_button = ttk.Button(colors_frame, text='Amber')
     amber_button.grid(row=1, column=0)
-    amber_button['command'] = lambda: selected_color
+    amber_button['command'] = lambda: set_color(mqtt_client, 'amber')
 
     red_button = ttk.Button(colors_frame, text='Red')
     red_button.grid(row=1, column=1)
+    red_button['command'] = lambda: set_color(mqtt_client, 'red')
 
     green_button = ttk.Button(colors_frame, text='Green')
     green_button.grid(row=1, column=2)
+    green_button['command'] = lambda: set_color(mqtt_client, 'green')
 
     black_button = ttk.Button(colors_frame, text='Black')
     black_button.grid(row=1, column=3)
+    black_button['command'] = lambda: set_color(mqtt_client, 'black')
+
+    root.mainloop()
+
+
+def choose_mode():
+    mqtt_client = com.MqttClient()
+    mqtt_client.connect_to_ev3()
+
+    root = tkinter.Tk()
+    root.title("Select Drive Style")
+
+    drive_frame = ttk.Frame(root, padding=20, relief='raised')
+    drive_frame.grid()
+
+    manual_button = ttk.Button(drive_frame, text='Manual Drive')
+    manual_button.grid(row=1, column=0)
+    manual_button['command'] = lambda: manual_drive_controls()
+
+    placeholder_label = ttk.Label(drive_frame, text='       ')
+    placeholder_label.grid(row=1, column=1)
+
+    automatic_button = ttk.Button(drive_frame, text='Automatic Drive')
+    automatic_button.grid(row=1, column=2)
+
+    root.mainloop()
 
 
 # Manual Drive Controls:
@@ -175,10 +202,17 @@ def quit_program(mqtt_client, shutdown_ev3):
     mqtt_client.close()
     exit()
 
+
+def set_color(mqtt_client, color):
+    color_to_search = color
+    print(color_to_search)
+    mqtt_client.close()
+
+
 ##############################################################################
 # This is where the fun begins!
 ##############################################################################
 
 
 select_color_window()
-manual_drive_controls()
+choose_mode()
