@@ -15,21 +15,23 @@ def select_color_window():
     colors_frame = ttk.Frame(root, padding=20, relief='raised')
     colors_frame.grid()
 
-    amber_button = ttk.Button(colors_frame, text='Amber')
-    amber_button.grid(row=1, column=0)
-    amber_button['command'] = lambda: set_color(mqtt_client, 'amber')
-
     red_button = ttk.Button(colors_frame, text='Red')
     red_button.grid(row=1, column=1)
     red_button['command'] = lambda: set_color(mqtt_client, 'red')
+    red_button['command'] = lambda: send_led_command(mqtt_client, "left", "red")
+    red_button['command'] = lambda: send_led_command(mqtt_client, "right", "red")
 
     green_button = ttk.Button(colors_frame, text='Green')
     green_button.grid(row=1, column=2)
     green_button['command'] = lambda: set_color(mqtt_client, 'green')
+    green_button['command'] = lambda: send_led_command(mqtt_client, "left", "green")
+    green_button['command'] = lambda: send_led_command(mqtt_client, "right", "green")
 
     black_button = ttk.Button(colors_frame, text='Black')
     black_button.grid(row=1, column=3)
     black_button['command'] = lambda: set_color(mqtt_client, 'black')
+    black_button['command'] = lambda: send_led_command(mqtt_client, "left", "black")
+    black_button['command'] = lambda: send_led_command(mqtt_client, "right", "black")
 
     root.mainloop()
 
@@ -140,6 +142,13 @@ def manual_drive_controls():
     root.mainloop()
 
 
+def automatic_drive(mqtt_client, left_speed_entry, right_speed_entry):
+    left_speed = left_speed_entry.get()
+    right_speed = right_speed_entry.get()
+
+    # Here we need to insert the code to make the robot drive while searching for a color
+
+
 def drive(mqtt_client, left_speed_entry, right_speed_entry):
     print("drive forward")
 
@@ -206,13 +215,15 @@ def quit_program(mqtt_client, shutdown_ev3):
 def set_color(mqtt_client, color):
     color_to_search = color
     print(color_to_search)
-    mqtt_client.close()
+
+
+def send_led_command(mqtt_client, led_side, led_color):
+    print("Sending LED side = {}  LED color = {}".format(led_side, led_color))
+    mqtt_client.send_message("set_led", [led_side, led_color])
 
 
 ##############################################################################
 # This is where the fun begins!
 ##############################################################################
-
-
-select_color_window()
+select_color_window()          # Need a way to close the color window after selection without ending the entire program
 choose_mode()
