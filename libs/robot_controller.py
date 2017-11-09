@@ -35,6 +35,10 @@ class Snatch3r(object):
         self.ir_sensor = ev3.InfraredSensor()
         self.pixy = ev3.Sensor(driver_name="pixy-lego")
         self.man_up_value = 1
+        self.follower = False
+        self.color = 0
+        self.calibrate = False
+        self.time_s = 0
 
         assert self.pixy
 
@@ -129,14 +133,14 @@ class Snatch3r(object):
 
         assert self.left_motor.connected
 
-        self.left_motor.stop()
+        self.left_motor.stop(stop_action=ev3.Motor.STOP_ACTION_BRAKE)
         self.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.BLACK)
 
     def rightmotor_stop(self):
 
         assert self.right_motor.connected
 
-        self.right_motor.stop()
+        self.right_motor.stop(stop_action=ev3.Motor.STOP_ACTION_BRAKE)
         self.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.BLACK)
 
     def left_forward(self):
@@ -301,3 +305,88 @@ class Snatch3r(object):
                     print('Heading too far off')
 
             time.sleep(0.2)
+
+    def new_drive_inches(self, drive_speed, inches):
+
+        assert self.left_motor.connected
+        assert self.right_motor.connected
+
+        self.time_s = 1  # Any value other than 0.
+        while self.time_s != 0:
+            self.left_motor.run_to_rel_pos(speed_sp=drive_speed, position_sp=90 * inches, stop_action=ev3.Motor.STOP_ACTION_BRAKE)
+            self.right_motor.run_to_rel_pos(speed_sp=drive_speed,position_sp=90*inches,stop_action=ev3.Motor.STOP_ACTION_BRAKE)
+
+            self.left_motor.wait_while(ev3.Motor.STATE_RUNNING)
+            self.right_motor.wait_while(ev3.Motor.STATE_RUNNING)
+
+            self.time_s = 0
+
+    def new_turn_degrees(self, turn_speed, degree_of_turn):
+
+        assert self.left_motor.connected
+        assert self.right_motor.connected
+
+        revolutions = (6.5 * math.pi * (degree_of_turn / 360)) / 3.7
+        position = revolutions * 360
+
+        self.time_s = 1  # Any value other than 0.
+        while self.time_s != 0:
+
+            self.left_motor.run_to_rel_pos(speed_sp=turn_speed, position_sp=-position, stop_action=ev3.Motor.STOP_ACTION_BRAKE)
+            self.right_motor.run_to_rel_pos(speed_sp=turn_speed,position_sp=position,stop_action=ev3.Motor.STOP_ACTION_BRAKE)
+
+            self.left_motor.wait_while(ev3.Motor.STATE_RUNNING)
+            self.right_motor.wait_while(ev3.Motor.STATE_RUNNING)
+
+            self.time_s = 0
+
+    def follow_color(self, drive_speed, turn_speed):
+
+        self.follower = True
+
+        while True:
+
+            if self.follower == False:
+                break
+
+            elif self.color_sensor.color == self.color:
+                self.drive(drive_speed, drive_speed)
+
+            elif self.color_sensor.color != self.color:
+                while not self.color_sensor.color == self.color:
+                    self.new_turn_degrees(turn_speed, 110)
+                    self.new_turn_degrees(turn_speed, -220)
+                self.time_s = 0
+                self.stop_both()
+            time.sleep(200 / drive_speed)
+
+    def stop_follow(self):
+
+        self.follower = False
+        self.stop_both()
+
+    def set_color(self, color_var):
+
+        self.color = color_var
+
+    def calibrate(self):
+
+        self.calibrate = True
+
+        while self.calibrate == True:
+            if self.calibrate == False:
+                break
+            self.drive(800, 0)
+            time.sleep(.1)
+            self.drive(0, -800)
+            time.sleep(.1)
+
+    def find_follow_color(self, color, drive_speed, turn_speed):
+
+        while not self.color_sensor.color == self.color:
+
+            self.new_drive_inches(drive_speed, 4)
+            self.new_turn_degrees(turn_speed, 180)
+    
+
+
