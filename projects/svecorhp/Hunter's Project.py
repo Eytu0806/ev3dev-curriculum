@@ -17,21 +17,15 @@ def select_color_window():
 
     red_button = ttk.Button(colors_frame, text='Red')
     red_button.grid(row=1, column=1)
-    red_button['command'] = lambda: set_color(mqtt_client, 'red')
-    red_button['command'] = lambda: send_led_command(mqtt_client, "left", "red")
-    red_button['command'] = lambda: send_led_command(mqtt_client, "right", "red")
+    red_button['command'] = lambda: set_color(mqtt_client, 'red', colors_frame)
 
     green_button = ttk.Button(colors_frame, text='Green')
     green_button.grid(row=1, column=2)
-    green_button['command'] = lambda: set_color(mqtt_client, 'green')
-    green_button['command'] = lambda: send_led_command(mqtt_client, "left", "green")
-    green_button['command'] = lambda: send_led_command(mqtt_client, "right", "green")
+    green_button['command'] = lambda: set_color(mqtt_client, 'green', colors_frame)
 
     black_button = ttk.Button(colors_frame, text='Black')
     black_button.grid(row=1, column=3)
-    black_button['command'] = lambda: set_color(mqtt_client, 'black')
-    black_button['command'] = lambda: send_led_command(mqtt_client, "left", "black")
-    black_button['command'] = lambda: send_led_command(mqtt_client, "right", "black")
+    black_button['command'] = lambda: set_color(mqtt_client, 'black', colors_frame)
 
     root.mainloop()
 
@@ -73,14 +67,14 @@ def manual_drive_controls():
 
     left_speed_label = ttk.Label(main_frame, text="Left")
     left_speed_label.grid(row=0, column=0)
-    left_speed_entry = ttk.Entry(main_frame, width=8)
-    left_speed_entry.insert(0, "600")
+    left_speed_entry = tkinter.Spinbox(main_frame, from_=0, to=900, width=8)
+    left_speed_entry.insert(0, "60")
     left_speed_entry.grid(row=1, column=0)
 
     right_speed_label = ttk.Label(main_frame, text="Right")
     right_speed_label.grid(row=0, column=2)
-    right_speed_entry = ttk.Entry(main_frame, width=8, justify=tkinter.RIGHT)
-    right_speed_entry.insert(0, "600")
+    right_speed_entry = tkinter.Spinbox(main_frame, from_=0, to=900, width=8)
+    right_speed_entry.insert(0, "60")
     right_speed_entry.grid(row=1, column=2)
 
     forward_button = ttk.Button(main_frame, text="Forward")
@@ -173,7 +167,10 @@ def backward(mqtt_client, left_speed_entry, right_speed_entry):
 def stop(mqtt_client):
     print("stop")
 
-    mqtt_client.send_message("stop_both")
+    left_speed = 0
+    right_speed = 0
+
+    mqtt_client.send_message("stop_both", [left_speed, right_speed])
 
 
 def turn(mqtt_client, left_speed_entry, right_speed_entry, direction):
@@ -212,9 +209,11 @@ def quit_program(mqtt_client, shutdown_ev3):
     exit()
 
 
-def set_color(mqtt_client, color):
+def set_color(mqtt_client, color, frame):
     color_to_search = color
     print(color_to_search)
+    send_led_command(mqtt_client, 'left', color)
+    send_led_command(mqtt_client, 'right', color)
 
 
 def send_led_command(mqtt_client, led_side, led_color):
