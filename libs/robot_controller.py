@@ -34,6 +34,7 @@ class Snatch3r(object):
         self.color_sensor = ev3.ColorSensor()
         self.ir_sensor = ev3.InfraredSensor()
         self.pixy = ev3.Sensor(driver_name="pixy-lego")
+        self.man_up_value = 1
 
         assert self.pixy
 
@@ -175,8 +176,9 @@ class Snatch3r(object):
 
         while True:
             time.sleep(.01)
+
     def loop_until_object_is_detected(self, width):
-        while width < 0:
+        while not width > 0:
             time.sleep(.01)
 
     def drive(self, left_speed, right_speed):
@@ -189,6 +191,10 @@ class Snatch3r(object):
 
         self.left_motor.run_forever(speed_sp=self.left_speed)
         self.right_motor.run_forever(speed_sp=self.right_speed)
+
+    def man_up(self, value):
+
+        self.man_up_value = value
 
     def stop_both(self):
 

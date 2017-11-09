@@ -7,12 +7,7 @@ import ev3dev.ev3 as ev3
 import time
 
 import robot_controller as robo
-man_up_value = 1
-def EV3_is_Paranoid():
-    print("-----------------Computer:------------------")
-    print('Starting up EV3 is Paranoid')
-    print("--------------------------------------------")
-
+def Human_Control():
     mqtt_client = com.MqttClient()
     mqtt_client.connect_to_ev3()
 
@@ -79,15 +74,16 @@ def EV3_is_Paranoid():
 
     man_up_EV3 = ttk.Button(main_frame, text="Man_up_EV3!")
     man_up_EV3.grid(row=7, column=1)
-    man_up_EV3['command'] = (lambda: man_up_value(0))
+    man_up_EV3['command'] = (lambda: man_up(mqtt_client, 0))
     root.mainloop()
-def man_up(value):
+def man_up(mqtt_client, value):
     man_up_value = value
     root = tkinter.Tk()
     root.title("Man up Successful!")
     main_frame = ttk.Frame(root, padding=30, relief='raised')
     main_frame.grid()
     root.mainloop()
+    mqtt_client.send_message("man_up", [value])
 def drive(mqtt_client, left_speed_entry, right_speed_entry):
     print("drive forward")
 
@@ -138,5 +134,5 @@ def quit_program(mqtt_client, shutdown_ev3):
     mqtt_client.close()
     exit()
 
-EV3_is_Paranoid()
+Human_Control()
 
