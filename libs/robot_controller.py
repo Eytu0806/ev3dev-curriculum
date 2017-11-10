@@ -35,11 +35,11 @@ class Snatch3r(object):
         self.ir_sensor = ev3.InfraredSensor()
         self.pixy = ev3.Sensor(driver_name="pixy-lego")
         self.man_up_value = 1
-        self.follower = False
+        self.follower = 0
         self.color = 0
-        self.calibrate = False
+        self.calibrate = 0
         self.time_s = 0
-        self.user = True
+        self.user = 1
 
         assert self.pixy
 
@@ -192,7 +192,7 @@ class Snatch3r(object):
         assert self.left_motor.connected
         assert self.right_motor.connected
 
-        if self.user == True:
+        if self.user == 1:
             self.left_speed = left_speed
             self.right_speed = right_speed
 
@@ -208,7 +208,7 @@ class Snatch3r(object):
 
         assert self.left_motor.connected
         assert self.right_motor.connected
-        if self.user == True:
+        if self.user == 1:
             self.leftmotor_stop()
             self.rightmotor_stop()
 
@@ -346,13 +346,13 @@ class Snatch3r(object):
 
     def follow_color(self, drive_speed, turn_speed):
 
-        self.user = False
-        self.calibrate = False
-        self.follower = True
+        self.user = 0
+        self.calibrate = 0
+        self.follower = 1
         print('follwing a color')
         ev3.Sound.speak("Color Following").wait()
 
-        while self.follower == True:
+        while self.follower == 1:
 
             # if self.follower == False:
             #     break
@@ -376,29 +376,29 @@ class Snatch3r(object):
 
     def stop_follow(self):
 
-        self.follower = False
+        self.follower = 0
         self.stop_both()
-        self.user = True
+        self.user = 1
         ev3.Sound.speak("You can control me").wait()
 
     def set_color(self, color_var, drive_speed, turn_speed):
 
         self.color = color_var
         print(self.color)
-        if self.follower == True:
-            self.follower = False
-            self.user = False
-            self.calibrate = False
+        if self.follower == 1:
+            self.follower = 0
+            self.user = 0
+            self.calibrate = 0
             self.find_follow_color(drive_speed, turn_speed)
 
     def calibrate(self):
 
-        self.user = False
-        self.follower = False
-        self.calibrate = True
+        self.user = 0
+        self.follower = 0
+        self.calibrate = 1
 
-        while self.calibrate == True:
-            if self.calibrate == False:
+        while self.calibrate == 1:
+            if self.calibrate == 0:
                 break
             self.drive(800, 0)
             time.sleep(.1)
@@ -407,9 +407,9 @@ class Snatch3r(object):
 
     def stop_calibrate(self):
 
-        self.calibrate = False
-        self.follower = False
-        self.user = False
+        self.calibrate = 0
+        self.follower = 0
+        self.user = 0
 
         self.stop_both()
         ev3.Sound.speak("Ready to Line follow").wait()
@@ -417,7 +417,7 @@ class Snatch3r(object):
     def find_follow_color(self, drive_speed, turn_speed):
 
         help_var = 0
-        self.follower = False
+        self.follower = 0
         while not self.color_sensor.color == self.color:
 
             self.new_drive_inches(drive_speed, 4)
@@ -434,17 +434,17 @@ class Snatch3r(object):
         if help_var == 0:
             self.time_s = 0
             self.stop_both()
-            self.user = False
-            self.follower = False
+            self.user = 0
+            self.follower = 0
             ev3.Sound.speak("Ready to be calibrated").wait()
 
         elif help_var == 1:
             self.time_s = 0
             self.stop_both()
-            self.follower = False
+            self.follower = 0
             #speak statements
             ev3.Sound.speak("Help me find the line color").wait()
-            self.user = True
+            self.user = 1
 
     def color_test(self):
 
