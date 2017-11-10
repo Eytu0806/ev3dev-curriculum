@@ -3,6 +3,10 @@ from tkinter import ttk
 
 import mqtt_remote_method_calls as com
 
+red = "SIG1"
+green = "SIG2"
+black = "SIG3"
+
 
 # Selecting a color
 def select_color_window():
@@ -17,15 +21,15 @@ def select_color_window():
 
     red_button = ttk.Button(colors_frame, text='Red')
     red_button.grid(row=1, column=1)
-    red_button['command'] = lambda: set_color(mqtt_client, 'red', colors_frame)
+    red_button['command'] = lambda: set_color(mqtt_client, red, "red")
 
     green_button = ttk.Button(colors_frame, text='Green')
     green_button.grid(row=1, column=2)
-    green_button['command'] = lambda: set_color(mqtt_client, 'green', colors_frame)
+    green_button['command'] = lambda: set_color(mqtt_client, green, "green")
 
     black_button = ttk.Button(colors_frame, text='Black')
     black_button.grid(row=1, column=3)
-    black_button['command'] = lambda: set_color(mqtt_client, 'black', colors_frame)
+    black_button['command'] = lambda: set_color(mqtt_client, black, "black")
 
     root.mainloop()
 
@@ -49,6 +53,7 @@ def choose_mode():
 
     automatic_button = ttk.Button(drive_frame, text='Automatic Drive')
     automatic_button.grid(row=1, column=2)
+    automatic_button['command'] = lambda: automatic_drive(mqtt_client)
 
     root.mainloop()
 
@@ -136,13 +141,6 @@ def manual_drive_controls():
     root.mainloop()
 
 
-def automatic_drive(mqtt_client, left_speed_entry, right_speed_entry):
-    left_speed = left_speed_entry.get()
-    right_speed = right_speed_entry.get()
-
-    # Here we need to insert the code to make the robot drive while searching for a color
-
-
 def drive(mqtt_client, left_speed_entry, right_speed_entry):
     print("drive forward")
 
@@ -167,10 +165,7 @@ def backward(mqtt_client, left_speed_entry, right_speed_entry):
 def stop(mqtt_client):
     print("stop")
 
-    left_speed = 0
-    right_speed = 0
-
-    mqtt_client.send_message("stop_both", [left_speed, right_speed])
+    mqtt_client.send_message("stop_both")
 
 
 def turn(mqtt_client, left_speed_entry, right_speed_entry, direction):
@@ -209,11 +204,12 @@ def quit_program(mqtt_client, shutdown_ev3):
     exit()
 
 
-def set_color(mqtt_client, color, frame):
-    color_to_search = color
-    print(color_to_search)
-    send_led_command(mqtt_client, 'left', color)
-    send_led_command(mqtt_client, 'right', color)
+def set_color(mqtt_client, color, led_color):
+    print(color)
+    send_led_command(mqtt_client, 'left', led_color)
+    send_led_command(mqtt_client, 'right', led_color)
+    mqtt_client.send_message("set_SIG", [color])
+    choose_mode()
 
 
 def send_led_command(mqtt_client, led_side, led_color):
@@ -221,8 +217,14 @@ def send_led_command(mqtt_client, led_side, led_color):
     mqtt_client.send_message("set_led", [led_side, led_color])
 
 
+def set_automatic_color(mqtt_client, color):
+    print("If you choose automatic, the robot will go to ", color)
+    mqtt_client.send_message()
+
+def automatic_drive(mqtt_client):
+    mqtt_client.send_message("automatic_drive")
+
 ##############################################################################
 # This is where the fun begins!
 ##############################################################################
 select_color_window()          # Need a way to close the color window after selection without ending the entire program
-choose_mode()

@@ -11,6 +11,27 @@ def main():
     mqtt_client.connect_to_pc()
     # mqtt_client.connect_to_pc("35.194.247.175")  # Off campus IP address of a GCP broker
     robot.arm_calibration()
+
+    my_delegate = MyDelegate()
+    mqtt_client = com.MqttClient(my_delegate)
+    mqtt_client.connect_to_pc()
+
+    # Buttons on EV3 (these obviously assume TO DO: 3. is done)
+    btn = ev3.Button()
+    btn.on_up = lambda state: handle_button_press(state, mqtt_client, "Up")
+    btn.on_down = lambda state: handle_button_press(state, mqtt_client, "Down")
+    btn.on_left = lambda state: handle_button_press(state, mqtt_client, "Left")
+    btn.on_right = lambda state: handle_button_press(state, mqtt_client, "Right")
+    btn.on_backspace = lambda state: handle_shutdown(state, my_delegate)
+
+    while my_delegate.running:
+        btn.process()
+        time.sleep(0.01)
+
+    ev3.Sound.speak("Goodbye").wait()
+    ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
+    ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.GREEN)
+
     robot.loop_forever()  # Calls a function that has a while True: loop within it to avoid letting the program end.
 
 
@@ -44,29 +65,6 @@ class MyDelegate(object):
             ev3.Leds.set_color(led_side, led_color)
 
 
-def main2():
-
-    my_delegate = MyDelegate()
-    mqtt_client = com.MqttClient(my_delegate)
-    mqtt_client.connect_to_pc()
-
-    # Buttons on EV3 (these obviously assume TO DO: 3. is done)
-    btn = ev3.Button()
-    btn.on_up = lambda state: handle_button_press(state, mqtt_client, "Up")
-    btn.on_down = lambda state: handle_button_press(state, mqtt_client, "Down")
-    btn.on_left = lambda state: handle_button_press(state, mqtt_client, "Left")
-    btn.on_right = lambda state: handle_button_press(state, mqtt_client, "Right")
-    btn.on_backspace = lambda state: handle_shutdown(state, my_delegate)
-
-    while my_delegate.running:
-        btn.process()
-        time.sleep(0.01)
-
-    ev3.Sound.speak("Goodbye").wait()
-    ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
-    ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.GREEN)
-
-
 # ----------------------------------------------------------------------
 # Button event callback functions
 # ----------------------------------------------------------------------
@@ -87,6 +85,6 @@ def handle_shutdown(button_state, my_delegate):
 # ----------------------------------------------------------------------
 # Calls  main  to start the ball rolling.
 # ----------------------------------------------------------------------
-main2()
-
 main()
+
+

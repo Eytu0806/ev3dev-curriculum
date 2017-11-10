@@ -40,6 +40,7 @@ class Snatch3r(object):
         self.calibrate = 0
         self.time_s = 0
         self.user = 1
+        self.SIG = "SIG1"
 
         assert self.pixy
 
@@ -468,3 +469,78 @@ class Snatch3r(object):
             self.left_motor.run_forever(speed_sp=self.left_speed)
             self.right_motor.run_forever(speed_sp=self.right_speed)
 
+    def color_to_look_for_red(self):
+        self.pixy.mode = "SIG1"
+        turn_speed = 100
+
+        while not self.touch_sensor.is_pressed:
+
+            print("value1: X", self.pixy.value(1))
+            print("value2: Y", self.pixy.value(2))
+
+            if self.pixy.value(1) < 150:
+                self.drive(-turn_speed, turn_speed)
+            if self.pixy.value(1) > 170:
+                self.drive(turn_speed, -turn_speed)
+            if self.pixy.value(1) > 150 and self.pixy.value(1) < 170:
+                self.stop_both()
+
+            time.sleep(0.25)
+
+        print("Goodbye!")
+        ev3.Sound.speak("Goodbye").wait()
+
+    def set_SIG(self, SIG):
+        self.SIG = SIG
+
+    def automatic_drive(self):
+        self.pixy.mode = self.SIG
+        self.turn_to_color()
+        self.new_drive_inches(350, 24)
+        self.new_turn_degrees(350, 180)
+        self.new_seek_beacon()
+
+    def turn_to_color(self):
+        while True:
+            if self.pixy.value(1) < 150:
+                self.drive(-200, 200)
+            if self.pixy.value(1) > 170:
+                self.drive(200, -200)
+            if self.pixy.value(1) > 150 and self.pixy.value(1) < 170:
+                self.stop_both()
+                break
+
+    def new_seek_beacon(self):
+        forward_speed = 300
+        turn_speed = 100
+        BeaconSeaker = ev3.BeaconSeeker(channel=1)
+
+        while True:
+
+            current_heading = BeaconSeaker.heading  # use the beacon_seeker heading
+            current_distance = BeaconSeaker.distance  # use the beacon_seeker distance
+            if current_distance == -128:
+                # If the IR Remote is not found just sit idle for this program until it is moved.
+                print("IR Remote not found. Distance is -128")
+                self.stop_both()
+            else:
+                if math.fabs(current_heading) < 2:
+                    # Close enough of a heading to move forward
+                    print("On the right heading. Distance: ", current_distance)
+                    # You add more!
+                    if current_distance == 0:
+                        time.sleep(1)
+                        self.stop_both()
+                        return True
+                    if current_distance > 0:
+                        self.drive(forward_speed, forward_speed)
+                if math.fabs(current_heading) > 2 and math.fabs(current_heading) < 10:
+                    if current_heading < 0:
+                        self.drive(-turn_speed, turn_speed)
+                    if current_heading > 0:
+                        self.drive(turn_speed, -turn_speed)
+                if math.fabs(current_heading) > 10:
+                    self.stop_both()
+                    print('Heading too far off')
+
+            time.sleep(0.2)
