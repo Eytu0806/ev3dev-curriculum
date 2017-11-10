@@ -346,19 +346,22 @@ class Snatch3r(object):
 
     def follow_color(self, drive_speed, turn_speed):
 
+        cool_color = self.color
         self.user = 0
         self.calibrate = 0
         self.follower = 1
         print('follwing a color')
         ev3.Sound.speak("Color Following").wait()
+        self.color_drive(drive_speed, drive_speed)
+        while True:
 
-        while self.follower == 1:
-
-            # if self.follower == False:
-            #     break
-
-            while self.color_sensor.color == self.color:
-                self.drive(drive_speed, drive_speed)
+            if self.follower == 0:
+                break
+            #elif self.color_sensor.color == cool_color:
+            #    break
+            #if self.color_sensor == cool_color:
+            if self.color_sensor.color != cool_color:
+                break
 
             # elif self.color_sensor.color != self.color:
             #     time.sleep(200/ drive_speed)
@@ -371,8 +374,10 @@ class Snatch3r(object):
             #     self.follower = False
             #     self.user = False
             #     self.calibrate = False
-
+            time.sleep(.2)
+        self.follower = 0
         self.stop_both()
+        ev3.Sound.speak('Lost color').wait()
 
     def stop_follow(self):
 
@@ -451,4 +456,15 @@ class Snatch3r(object):
         print(self.color_sensor.color)
         time.sleep(1)
 
+    def color_drive(self, left_speed, right_speed):
+
+        assert self.left_motor.connected
+        assert self.right_motor.connected
+
+        if self.follower == 1:
+            self.left_speed = left_speed
+            self.right_speed = right_speed
+
+            self.left_motor.run_forever(speed_sp=self.left_speed)
+            self.right_motor.run_forever(speed_sp=self.right_speed)
 
