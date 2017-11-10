@@ -135,14 +135,14 @@ class Snatch3r(object):
         assert self.left_motor.connected
 
         self.left_motor.stop(stop_action=ev3.Motor.STOP_ACTION_BRAKE)
-        self.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.BLACK)
+        # self.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.BLACK)
 
     def rightmotor_stop(self):
 
         assert self.right_motor.connected
 
         self.right_motor.stop(stop_action=ev3.Motor.STOP_ACTION_BRAKE)
-        self.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.BLACK)
+        # self.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.BLACK)
 
     def left_forward(self):
 
@@ -345,6 +345,8 @@ class Snatch3r(object):
 
     def follow_color(self, drive_speed, turn_speed):
 
+        self.user = False
+        self.calibrate = False
         self.follower = True
 
         while True:
@@ -362,7 +364,10 @@ class Snatch3r(object):
                     self.new_turn_degrees(turn_speed, -220)
                 self.time_s = 0
                 self.stop_both()
-                self.drive(drive_speed, drive_speed)
+                ev3.Sound.speak("Ready to be calibrated").wait()
+                self.follower = False
+                self.user = False
+                self.calibrate = False
             time.sleep(200 / drive_speed)
         self.stop_both()
 
@@ -370,11 +375,16 @@ class Snatch3r(object):
 
         self.follower = False
         self.stop_both()
+        self.user = True
+        ev3.Sound.speak("You can control me").wait()
 
     def set_color(self, color_var, drive_speed, turn_speed):
 
         self.color = color_var
         if self.follower == True:
+            self.follower = False
+            self.user = False
+            self.calibrate = False
             self.find_follow_color(drive_speed, turn_speed)
 
     def calibrate(self):
@@ -393,7 +403,7 @@ class Snatch3r(object):
 
         self.calibrate = False
         self.stop_both()
-
+        ev3.Sound.speak("Ready to Line follow").wait()
 
     def find_follow_color(self, drive_speed, turn_speed):
 
@@ -417,13 +427,14 @@ class Snatch3r(object):
             self.stop_both()
             self.user = False
             self.follower = False
+            ev3.Sound.speak("Ready to be calibrated").wait()
 
         elif help_var == 1:
             self.time_s = 0
             self.stop_both()
             self.follower = False
             #speak statements
-
+            ev3.Sound.speak("Help me find the line color").wait()
             self.user = True
 
 

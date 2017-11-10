@@ -11,12 +11,13 @@ green = 3
 yellow = 4
 red = 5
 
+def start_calibrate(mqtt_client):
 
-def set_color(mqtt_client, color):
+    mqtt_client.send_message("calibrate")
 
-    mqtt_client.send_message("set_color", [color])
+def stop_calibrate(mqtt_client):
 
-
+    mqtt_client.send_message("stop_calibrate")
 
 def main():
 
@@ -116,6 +117,16 @@ def main():
     back_button['command'] = lambda: backward(mqtt_client, drive_speed_spin)
     root.bind('<Down>', lambda event: backward(mqtt_client, drive_speed_spin))
 
+    green_button['command'] = lambda: set_color(mqtt_client, green, drive_speed_spin, turn_speed_spin)
+    red_button['command'] = lambda: set_color(mqtt_client, red, drive_speed_spin, turn_speed_spin)
+    yellow_button['command'] = lambda: set_color(mqtt_client, yellow, drive_speed_spin, turn_speed_spin)
+    blue_button['command'] = lambda: set_color(mqtt_client, blue, drive_speed_spin, turn_speed_spin)
+
+    start_calibration_button['command'] = lambda: start_calibrate(mqtt_client)
+    stop_calibration_button['command'] = lambda: stop_calibrate(mqtt_client)
+
+    start_follow_button['command'] = lambda: start_follow(mqtt_client, drive_speed_spin, turn_speed_spin)
+    stop_follow_button['command'] = lambda: stop_follow(mqtt_client)
     # up_button = ttk.Button(main_frame, text="Up")
     # up_button.grid(row=5, column=0)
     # up_button['command'] = lambda: send_up(mqtt_client)
@@ -175,5 +186,23 @@ def turn(mqtt_client, turn_speed_spin, direction):
     elif direction == "right":
         right_speed = -right_speed
         mqtt_client.send_message("drive", [left_speed, right_speed])
+
+def start_follow(mqtt_client, drive_speed_spin, turn_speed_spin):
+
+    drive_speed = int(drive_speed_spin.get())
+    turn_speed = int(turn_speed_spin.get())
+
+    mqtt_client.send_message("follow_color", [drive_speed, turn_speed])
+
+def stop_follow(mqtt_client):
+
+    mqtt_client.send_message("stop_follow")
+
+def set_color(mqtt_client, color, drive_speed_spin, turn_speed_spin):
+
+    drive_speed = int(drive_speed_spin.get())
+    turn_speed = int(turn_speed_spin.get())
+    mqtt_client.send_message("set_color", [color, drive_speed, turn_speed])
+
 
 main()
