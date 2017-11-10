@@ -1,5 +1,6 @@
 import tkinter
 from tkinter import ttk
+from tkinter import *
 
 import mqtt_remote_method_calls as com
 
@@ -7,6 +8,8 @@ import ev3dev.ev3 as ev3
 import time
 
 import robot_controller as robo
+
+
 def Human_Control():
     mqtt_client = com.MqttClient()
     mqtt_client.connect_to_ev3()
@@ -72,18 +75,28 @@ def Human_Control():
     e_button.grid(row=6, column=2)
     e_button['command'] = (lambda: quit_program(mqtt_client, True))
 
-    man_up_EV3 = ttk.Button(main_frame, text="Man_up_EV3!")
-    man_up_EV3.grid(row=7, column=1)
-    man_up_EV3['command'] = (lambda: man_up(mqtt_client, 0))
+    man_up_label = ttk.Label(main_frame, text="Set Manliness Level")
+    man_up_label.grid(row=7,column=1)
+    man_up_entry = Scale(main_frame, from_=0,to=7,orient=HORIZONTAL)
+    man_up_entry.grid(row=10, column=1)
+
+    man_up_EV3 = ttk.Button(main_frame, text="Submit")
+    man_up_EV3.grid(row=11, column=1)
+    man_up_EV3['command'] = (lambda: man_up(mqtt_client, man_up_entry))
     root.mainloop()
+
 def man_up(mqtt_client, value):
-    man_up_value = value
-    root = tkinter.Tk()
+    root = tkinter.Toplevel()
     root.title("Man up Successful!")
     main_frame = ttk.Frame(root, padding=30, relief='raised')
     main_frame.grid()
-    root.mainloop()
-    mqtt_client.send_message("man_up", [value])
+
+    success_label = ttk.Label(main_frame, text="Man UP Successful!")
+    success_label.grid(row=0, column=0)
+
+    print(value.get())
+    mqtt_client.send_message("man_up", [int(value.get())])
+
 def drive(mqtt_client, left_speed_entry, right_speed_entry):
     print("drive forward")
 
