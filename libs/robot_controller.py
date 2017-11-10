@@ -200,6 +200,7 @@ class Snatch3r(object):
 
         self.man_up_value = value
 
+
     def stop_both(self):
 
         assert self.left_motor.connected
