@@ -39,6 +39,7 @@ class Snatch3r(object):
         self.color = 0
         self.calibrate = False
         self.time_s = 0
+        self.user = True
 
         assert self.pixy
 
@@ -190,11 +191,12 @@ class Snatch3r(object):
         assert self.left_motor.connected
         assert self.right_motor.connected
 
-        self.left_speed = left_speed
-        self.right_speed = right_speed
+        if self.user == True:
+            self.left_speed = left_speed
+            self.right_speed = right_speed
 
-        self.left_motor.run_forever(speed_sp=self.left_speed)
-        self.right_motor.run_forever(speed_sp=self.right_speed)
+            self.left_motor.run_forever(speed_sp=self.left_speed)
+            self.right_motor.run_forever(speed_sp=self.right_speed)
 
     def man_up(self, value):
 
@@ -204,9 +206,9 @@ class Snatch3r(object):
 
         assert self.left_motor.connected
         assert self.right_motor.connected
-
-        self.leftmotor_stop()
-        self.rightmotor_stop()
+        if self.user == True:
+            self.leftmotor_stop()
+            self.rightmotor_stop()
 
     def find_color(self, color_var):
 
@@ -353,21 +355,26 @@ class Snatch3r(object):
                 self.drive(drive_speed, drive_speed)
 
             elif self.color_sensor.color != self.color:
+                time.sleep(200/ drive_speed)
                 while not self.color_sensor.color == self.color:
                     self.new_turn_degrees(turn_speed, 110)
                     self.new_turn_degrees(turn_speed, -220)
                 self.time_s = 0
                 self.stop_both()
+                self.drive(drive_speed, drive_speed)
             time.sleep(200 / drive_speed)
+        self.stop_both()
 
     def stop_follow(self):
 
         self.follower = False
         self.stop_both()
 
-    def set_color(self, color_var):
+    def set_color(self, color_var, drive_speed, turn_speed):
 
         self.color = color_var
+        if self.follower == True:
+            self.find_follow_color(drive_speed, turn_speed)
 
     def calibrate(self):
 
@@ -381,12 +388,43 @@ class Snatch3r(object):
             self.drive(0, -800)
             time.sleep(.1)
 
-    def find_follow_color(self, color, drive_speed, turn_speed):
+    def stop_calibrate(self):
 
+        self.calibrate = False
+        self.stop_both()
+
+
+    def find_follow_color(self, drive_speed, turn_speed):
+
+        help_var = 0
+        self.follower = False
         while not self.color_sensor.color == self.color:
 
             self.new_drive_inches(drive_speed, 4)
             self.new_turn_degrees(turn_speed, 180)
-    
+            self.new_drive_inches(drive_speed, 18)
+            self.new_turn_degrees(turn_speed, 90)
+            self.new_drive_inches(drive_speed, 12)
+            self.new_turn_degrees(turn_speed, -180)
+            self.new_drive_inches(drive_speed, 12)
+            self.new_turn_degrees(turn_speed, 135)
+            self.new_drive_inches(drive_speed, 10)
+            help_var = 1
+
+        if help_var == 0:
+            self.time_s = 0
+            self.stop_both()
+            self.user = False
+            self.follower = False
+
+        elif help_var == 1:
+            self.time_s = 0
+            self.stop_both()
+            self.follower = False
+            #speak statements
+
+            self.user = True
+
+
 
 

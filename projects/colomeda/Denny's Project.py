@@ -12,14 +12,9 @@ yellow = 4
 red = 5
 
 
-def color_calibrate(mqtt_client, color):
-    pass
+def set_color(mqtt_client, color):
 
-
-def stop_follow(mqtt_client, new_color):
-
-    mqtt_client.send_message("stop_follow")
-    mqtt_client.send_message("set_color", [new_color])
+    mqtt_client.send_message("set_color", [color])
 
 
 
@@ -85,10 +80,30 @@ def main():
 
     green_button = tkinter.Button(main_frame, text="Green", fg="green")
     green_button.grid(row=6, column=1)
-    green_button['command'] = lambda:
+    # green_button['command'] = lambda:
 
     direction_label_3 = ttk.Label(main_frame, text="Use the Colored Buttons to tell the robot to follow that colored line")
     direction_label_3.grid(row=6, column=3)
+
+    start_follow_label = ttk.Label(main_frame, text="Press to Start following")
+    start_follow_label.grid(row=7, column=3)
+    start_follow_button = ttk.Button(main_frame, text="Start")
+    start_follow_button.grid(row=7, column=1)
+
+    stop_follow_label = ttk.Label(main_frame, text="Press to Stop Following and Switch to User Control")
+    stop_follow_label.grid(row=8, column=3)
+    stop_follow_button = ttk.Button(main_frame, text="Stop")
+    stop_follow_button.grid(row=8, column=1)
+
+    start_calibration_label = ttk.Label(main_frame, text="Press to Start Calibrating when the robot asks")
+    start_calibration_label.grid(row=9, column=3)
+    start_calibration_button = ttk.Button(main_frame, text="Calibrate")
+    start_calibration_button.grid(row=9, column=1)
+
+    stop_calibration_label = ttk.Label(main_frame, text="Press to Stop Calibration when robot is lined up")
+    stop_calibration_label.grid(row=10, column=3)
+    stop_calibration_button = ttk.Button(main_frame, text="Lined Up")
+    stop_calibration_button.grid(row=10, column=1)
 
     forward_button['command'] = lambda: drive(mqtt_client, drive_speed_spin)
     root.bind('<Up>', lambda event: drive(mqtt_client, drive_speed_spin))
@@ -124,45 +139,41 @@ def main():
     root.mainloop()
 
 def drive(mqtt_client, drive_speed_spin):
-    if number == 1:
-        print("drive forward")
 
-        left_speed = int(drive_speed_spin.get())
-        right_speed = int(drive_speed_spin.get())
 
-        mqtt_client.send_message("drive", [left_speed, right_speed])
+    left_speed = int(drive_speed_spin.get())
+    right_speed = int(drive_speed_spin.get())
+
+    mqtt_client.send_message("drive", [left_speed, right_speed])
 
 def backward(mqtt_client, drive_speed_spin):
-    if number == 1:
-        print("drive backward")
 
-        left_speed = int(drive_speed_spin.get())
-        right_speed = int(drive_speed_spin.get())
 
-        left_speed = -left_speed
-        right_speed = -right_speed
+    left_speed = int(drive_speed_spin.get())
+    right_speed = int(drive_speed_spin.get())
 
-        mqtt_client.send_message("drive", [left_speed, right_speed])
+    left_speed = -left_speed
+    right_speed = -right_speed
+
+    mqtt_client.send_message("drive", [left_speed, right_speed])
 
 def stop(mqtt_client):
-    if number == 1:
-        print("stop")
 
-        mqtt_client.send_message("stop_both")
+
+    mqtt_client.send_message("stop_both")
 
 def turn(mqtt_client, turn_speed_spin, direction):
-    if number == 1:
-        print("turn", direction)
 
-        left_speed = int(turn_speed_spin.get())
-        right_speed = int(turn_speed_spin.get())
 
-        if direction == "left":
-            left_speed = -left_speed
-            mqtt_client.send_message("drive", [left_speed, right_speed])
+    left_speed = int(turn_speed_spin.get())
+    right_speed = int(turn_speed_spin.get())
 
-        elif direction == "right":
-            right_speed = -right_speed
-            mqtt_client.send_message("drive", [left_speed, right_speed])
+    if direction == "left":
+        left_speed = -left_speed
+        mqtt_client.send_message("drive", [left_speed, right_speed])
+
+    elif direction == "right":
+        right_speed = -right_speed
+        mqtt_client.send_message("drive", [left_speed, right_speed])
 
 main()
