@@ -11,14 +11,6 @@ green = 3
 yellow = 4
 red = 5
 
-def start_calibrate(mqtt_client):
-
-    mqtt_client.send_message("calibrate")
-
-def stop_calibrate(mqtt_client):
-
-    mqtt_client.send_message("stop_calibrate")
-
 def main():
 
 
@@ -204,5 +196,12 @@ def set_color(mqtt_client, color, drive_speed_spin, turn_speed_spin):
     turn_speed = int(turn_speed_spin.get())
     mqtt_client.send_message("set_color", [color, drive_speed, turn_speed])
 
+def start_calibrate(mqtt_client):
+
+    mqtt_client.send_message("calibrate")
+
+def stop_calibrate(mqtt_client):
+
+    mqtt_client.send_message("stop_calibrate")
 
 main()

@@ -389,6 +389,8 @@ class Snatch3r(object):
 
     def calibrate(self):
 
+        self.user = False
+        self.follower = False
         self.calibrate = True
 
         while self.calibrate == True:
@@ -402,6 +404,9 @@ class Snatch3r(object):
     def stop_calibrate(self):
 
         self.calibrate = False
+        self.follower = False
+        self.user = False
+
         self.stop_both()
         ev3.Sound.speak("Ready to Line follow").wait()
 
