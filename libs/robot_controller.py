@@ -495,10 +495,13 @@ class Snatch3r(object):
 
     def automatic_drive(self):
         self.pixy.mode = self.SIG
+        ev3.Sound.speak("Looking for criminal").wait()
         self.turn_to_color()
         self.new_drive_inches(350, 24)
+        ev3.Sound.speak("This is them").wait()
         self.new_turn_degrees(350, 180)
         self.new_seek_beacon()
+        ev3.Sound.speak("Thank you officer").wait()
 
     def turn_to_color(self):
         while True:
