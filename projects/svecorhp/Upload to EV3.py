@@ -10,7 +10,7 @@ def main():
     mqtt_client = com.MqttClient(robot)
     mqtt_client.connect_to_pc()
     # mqtt_client.connect_to_pc("35.194.247.175")  # Off campus IP address of a GCP broker
-    robot.arm_calibration()
+    # robot.arm_calibration()
 
     my_delegate = MyDelegate()
     mqtt_client = com.MqttClient(my_delegate)
