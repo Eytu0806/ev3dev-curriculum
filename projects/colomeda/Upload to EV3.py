@@ -7,7 +7,7 @@ def main():
     mqtt_client = com.MqttClient(robot)
     mqtt_client.connect_to_pc()
     # mqtt_client.connect_to_pc("35.194.247.175")  # Off campus IP address of a GCP broker
-    robot.arm_calibration()
+    robot.Sounds.speak("Ready to follow").wait()
     robot.loop_forever()  # Calls a function that has a while True: loop within it to avoid letting the program end.
 
 
