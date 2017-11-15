@@ -41,6 +41,7 @@ class Snatch3r(object):
         self.time_s = 0
         self.user = 1
         self.SIG = "SIG1"
+        self.finder = 0
 
         assert self.pixy
 
@@ -208,9 +209,9 @@ class Snatch3r(object):
 
         assert self.left_motor.connected
         assert self.right_motor.connected
-        if self.user == 1:
-            self.leftmotor_stop()
-            self.rightmotor_stop()
+
+        self.leftmotor_stop()
+        self.rightmotor_stop()
 
     def find_color(self, color_var):
 
@@ -350,34 +351,27 @@ class Snatch3r(object):
         self.user = 0
         self.calibrate = 0
         self.follower = 1
-        print('follwing a color')
+        print('Following a color')
         ev3.Sound.speak("Color Following").wait()
+        time.sleep(.5)
         self.color_drive(drive_speed, drive_speed)
         while True:
 
             if self.follower == 0:
                 break
-            #elif self.color_sensor.color == cool_color:
-            #    break
-            #if self.color_sensor == cool_color:
             if self.color_sensor.color != cool_color:
                 break
-
-            # elif self.color_sensor.color != self.color:
-            #     time.sleep(200/ drive_speed)
-            #     while not self.color_sensor.color == self.color:
-            #         self.new_turn_degrees(turn_speed, 110)
-            #         self.new_turn_degrees(turn_speed, -220)
-            #     self.time_s = 0
-            #     self.stop_both()
-            #     ev3.Sound.speak("Ready to be calibrated").wait()
-            #     self.follower = False
-            #     self.user = False
-            #     self.calibrate = False
-            time.sleep(.2)
+            time.sleep(.4)
         self.follower = 0
         self.stop_both()
-        ev3.Sound.speak('Lost color').wait()
+        self.finder = 1
+        self.find_drive(-turn_speed, turn_speed)
+        while not self.color_sensor.color == self.color:
+            time.sleep(.01)
+        self.finder = 0
+        self.stop_both()
+        ev3.Sound.speak("Ready to be calibrated").wait()
+        self.calibrate = 1
 
     def stop_follow(self):
 
@@ -386,71 +380,41 @@ class Snatch3r(object):
         self.user = 1
         ev3.Sound.speak("You can control me").wait()
 
-    def set_color(self, color_var, drive_speed, turn_speed):
+    def set_color(self, color_var):
 
         self.color = color_var
         print(self.color)
-        if self.follower == 1:
-            self.follower = 0
-            self.user = 0
-            self.calibrate = 0
-            self.find_follow_color(drive_speed, turn_speed)
+        if self.color == 2:
+            self.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.BLACK)
+            self.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.BLACK)
+        if self.color == 3:
+            self.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.GREEN)
+            self.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
+        if self.color == 4:
+            self.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.YELLOW)
+            self.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.YELLOW)
+        if self.color == 5:
+            self.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.RED)
+            self.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.RED)
 
-    def calibrate(self):
-
-        self.user = 0
-        self.follower = 0
-        self.calibrate = 1
-
-        while self.calibrate == 1:
-            if self.calibrate == 0:
-                break
-            self.drive(800, 0)
-            time.sleep(.1)
-            self.drive(0, -800)
-            time.sleep(.1)
+    def start_calibrate(self):
+        print('calibrating')
+        self.user = 1
 
     def stop_calibrate(self):
 
-        self.calibrate = 0
-        self.follower = 0
+        print('stopping calibration')
         self.user = 0
-
         self.stop_both()
         ev3.Sound.speak("Ready to Line follow").wait()
 
-    def find_follow_color(self, drive_speed, turn_speed):
-
-        help_var = 0
-        self.follower = 0
-        while not self.color_sensor.color == self.color:
-
-            self.new_drive_inches(drive_speed, 4)
-            self.new_turn_degrees(turn_speed, 180)
-            self.new_drive_inches(drive_speed, 18)
-            self.new_turn_degrees(turn_speed, 90)
-            self.new_drive_inches(drive_speed, 12)
-            self.new_turn_degrees(turn_speed, -180)
-            self.new_drive_inches(drive_speed, 12)
-            self.new_turn_degrees(turn_speed, 135)
-            self.new_drive_inches(drive_speed, 10)
-            help_var = 1
-
-        if help_var == 0:
-            self.time_s = 0
-            self.stop_both()
-            self.user = 0
-            self.follower = 0
-            ev3.Sound.speak("Ready to be calibrated").wait()
-
-        elif help_var == 1:
-            self.time_s = 0
-            self.stop_both()
-            self.follower = 0
-            #speak statements
-            ev3.Sound.speak("Help me find the line color").wait()
-            self.user = 1
-
+    def find_follow_color(self):
+        self.calibrate = 1
+        while self.color_sensor.color != self.color:
+            self.calibrate_drive(500, 200)
+            time.sleep(.1)
+        self.stop_both()
+        self.calibrate = 0
     def color_test(self):
 
         print(self.color_sensor.color)
@@ -462,6 +426,30 @@ class Snatch3r(object):
         assert self.right_motor.connected
 
         if self.follower == 1:
+            self.left_speed = left_speed
+            self.right_speed = right_speed
+
+            self.left_motor.run_forever(speed_sp=self.left_speed)
+            self.right_motor.run_forever(speed_sp=self.right_speed)
+
+    def find_drive(self, left_speed, right_speed):
+
+        assert self.left_motor.connected
+        assert self.right_motor.connected
+
+        if self.finder == 1:
+            self.left_speed = left_speed
+            self.right_speed = right_speed
+
+            self.left_motor.run_forever(speed_sp=self.left_speed)
+            self.right_motor.run_forever(speed_sp=self.right_speed)
+
+    def calibrate_drive(self, left_speed, right_speed):
+
+        assert self.left_motor.connected
+        assert self.right_motor.connected
+
+        if self.calibrate == 1:
             self.left_speed = left_speed
             self.right_speed = right_speed
 
