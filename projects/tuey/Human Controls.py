@@ -17,19 +17,19 @@ def Human_Control():
     root = tkinter.Tk()
     root.title("Human Control Panel")
 
-    main_frame = ttk.Frame(root, padding=30, relief='raised')
+    main_frame = ttk.Frame(root, padding=100, relief="groove")
     main_frame.grid()
 
     left_speed_label = ttk.Label(main_frame, text="Left")
     left_speed_label.grid(row=0, column=0)
     left_speed_entry = ttk.Entry(main_frame, width=8)
-    left_speed_entry.insert(0, "600")
+    left_speed_entry.insert(0, "300")
     left_speed_entry.grid(row=1, column=0)
 
     right_speed_label = ttk.Label(main_frame, text="Right")
     right_speed_label.grid(row=0, column=2)
     right_speed_entry = ttk.Entry(main_frame, width=8, justify=tkinter.RIGHT)
-    right_speed_entry.insert(0, "600")
+    right_speed_entry.insert(0, "300")
     right_speed_entry.grid(row=1, column=2)
 
     forward_button = ttk.Button(main_frame, text="Forward")
@@ -75,13 +75,14 @@ def Human_Control():
     e_button.grid(row=6, column=2)
     e_button['command'] = (lambda: quit_program(mqtt_client, True))
 
-    man_up_label = ttk.Label(main_frame, text="Set Manliness Level")
-    man_up_label.grid(row=7,column=1)
-    man_up_entry = Scale(main_frame, from_=0,to=7,orient=HORIZONTAL)
-    man_up_entry.grid(row=10, column=1)
+    man_up_label = ttk.Label(main_frame, text="Paranoia Value")
+    man_up_label.grid(row=5,column=1)
+
+    man_up_entry = Scale(main_frame, from_=0,to=1,orient=HORIZONTAL)
+    man_up_entry.grid(row=6, column=1)
 
     man_up_EV3 = ttk.Button(main_frame, text="Submit")
-    man_up_EV3.grid(row=11, column=1)
+    man_up_EV3.grid(row=7, column=1)
     man_up_EV3['command'] = (lambda: man_up(mqtt_client, man_up_entry))
     root.mainloop()
 
@@ -90,11 +91,9 @@ def man_up(mqtt_client, value):
     root.title("Man up Successful!")
     main_frame = ttk.Frame(root, padding=30, relief='raised')
     main_frame.grid()
-
-    success_label = ttk.Label(main_frame, text="Man UP Successful!")
+    success_label = ttk.Label(main_frame, text="Done")
     success_label.grid(row=0, column=0)
 
-    print(value.get())
     mqtt_client.send_message("man_up", [int(value.get())])
 
 def drive(mqtt_client, left_speed_entry, right_speed_entry):

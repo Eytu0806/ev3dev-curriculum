@@ -34,7 +34,7 @@ class Snatch3r(object):
         self.color_sensor = ev3.ColorSensor()
         self.ir_sensor = ev3.InfraredSensor()
         self.pixy = ev3.Sensor(driver_name="pixy-lego")
-        self.man_up_value = 1
+        self.man_up_value = 0
         self.follower = 0
         self.color = 0
         self.calibrate = 0
@@ -201,7 +201,6 @@ class Snatch3r(object):
             self.right_motor.run_forever(speed_sp=self.right_speed)
 
     def man_up(self, value):
-
         self.man_up_value = value
 
 

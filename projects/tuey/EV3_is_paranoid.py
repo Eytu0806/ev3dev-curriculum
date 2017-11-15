@@ -14,73 +14,73 @@ def main():
     print("--------------------------------------------")
 
     speech = 0
-
+    btn = ev3.Button()
+    robot.pixy.mode = "SIG1"
     while not robot.touch_sensor.is_pressed:
-        width_value = robot.pixy.value(3)
-        if robot.man_up_value == 1:
-            print("Man level is 1")
-            robot.pixy.mode = "SIG1"
-        elif robot.man_up_value == 2:
-            print("Man level is 2")
-            robot.pixy.mode = "SIG2"
-        elif robot.man_up_value == 3:
-            print("Man level is 3")
-            robot.pixy.mode = "SIG3"
-        elif robot.man_up_value == 4:
-            print("Man level is 4")
-            robot.pixy.mode = "SIG4"
-        elif robot.man_up_value == 5:
-            print("Man level is 5")
-            robot.pixy.mode = "SIG5"
-        elif robot.man_up_value == 6:
-            print("Man level is 6")
-            robot.pixy.mode = "SIG6"
-        elif robot.man_up_value == 7:
-            ev3.Sound.play("/home/robot/csse120/assets/sounds/female_scream.wav")
-            print("Man level is 7")
-            robot.pixy.mode = "SIG7"
+        if btn.left or btn.right or btn.up or btn.down and robot.man_up_value == 1:
+            ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.RED)
+            ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.RED)
+            freak_out(robot)
+        ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.GREEN)
+        ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
 
-        # When man_up_value is 0, then the robot ignores this.
-        if width_value > 0 and speech == 0:
+        width_value = robot.pixy.value(3)
+
+        if width_value > 0 and speech == 0 and robot.man_up_value == 1:
             run_away(robot)
             ev3.Sound.speak("Lets never go there again").wait()
+            time.sleep(2)
             computer_advice('Dialogue Number:',speech, "of 4")
             speech = speech + 1
         elif width_value > 0 and speech == 1:
             run_away(robot)
             ev3.Sound.speak("Why do you have to do this").wait()
-            computer_advice('Dialogue Number:', speech, "of 4")
+            time.sleep(2)
             speech = speech + 1
-        elif width_value > 0 and speech == 2:
+
+        elif width_value > 0 and speech == 2 and robot.man_up_value == 1:
+
             run_away(robot)
             ev3.Sound.speak("That was so scary").wait()
+            time.sleep(2)
             computer_advice('Dialogue Number:', speech, "of 4")
             speech = speech + 1
-        elif width_value > 0 and speech == 3:
+
+        elif width_value > 0 and speech == 3 and robot.man_up_value == 1:
+
             run_away(robot)
             ev3.Sound.speak("What was that").wait()
+            time.sleep(3)
             computer_advice('Dialogue Number:', speech, "of 4")
             speech += 1
-        elif width_value > 0 and speech == 4:
+
+        elif width_value > 0 and speech == 4 and robot.man_up_value == 1:
+
             run_away(robot)
-            ev3.Sound.speak("What did I just see").wait()
+            ev3.Sound.speak("What did I just see")
             computer_advice('Dialogue Number:', speech, "of 4")
             speech = 0
 
 def computer_advice(advice1,advice2,advice3):
     print("-----------------Computer:------------------")
-    print(str(advice1,advice2,advice3))
+    print(advice1,str(advice2),advice3)
     print("--------------------------------------------")
 def run_away(robot):
     print("-----------------Computer:------------------")
     print("EV3 is scared!")
     print("--------------------------------------------")
-    ev3.Sound.play("/home/robot/csse120/assets/sounds/female_scream.wav")
-    robot.turn_degrees(180, 800)
-    time.sleep(1)
-    robot.drive(700, 700)
+    if robot.man_up_value == 1:
+        ev3.Sound.beep().wait()
+        robot.stop_both()
+        robot.turn_degrees(180, 800)
+        time.sleep(1)
+        robot.drive(700, 700)
+        time.sleep(3)
+        robot.stop_both()
+def freak_out(robot):
+    ev3.Sound.beep().wait()
+    robot.turn_degrees(360, 800)
     time.sleep(3)
-    robot.stop_both()
 
 
 main()
