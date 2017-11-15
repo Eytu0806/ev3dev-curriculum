@@ -52,7 +52,7 @@ def Human_Control():
     right_button['command'] = lambda: turn(mqtt_client, left_speed_entry, right_speed_entry, "right")
     root.bind('<Right>', lambda event: turn(mqtt_client, left_speed_entry, right_speed_entry, "right"))
 
-    back_button = ttk.Button(main_frame, text="Back")
+    back_button = ttk.Button(main_frame, text="Backward")
     back_button.grid(row=4, column=1)
     back_button['command'] = lambda: backward(mqtt_client, left_speed_entry, right_speed_entry)
     root.bind('<Down>', lambda event: backward(mqtt_client, left_speed_entry, right_speed_entry))
